@@ -30,7 +30,7 @@ def pixelbypixelComparison(imageA_path, imageB_path):
     # cnts is an arary of (x,y) coordenates that descrives the shape that holds all
     # the differences
     print(cnts)
-    cv2.drawContours(imageA, cnts, -1, (225, 255, 120), 1)
+    cv2.drawContours(imageA, cnts, -1, (225, 255, 120), -1)
     cv2.imshow("Image A", imageA)
 
     cv2.waitKey(0)
