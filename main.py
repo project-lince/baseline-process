@@ -1,11 +1,10 @@
-
-import pixelbypixel_diff
-import image_diff
+from source.image_diff import showDifference
+from source.pixelbypixel_diff import pixelbypixelComparison
 
 
 def main():
     pixelbypixelComparison("a","b")
-    image_diff.showDifference()
+    showDifference()
     #image_diff.showImage()
     #image_diff.showImageGray()
     #image_diff.showImageThresh()
