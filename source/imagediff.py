@@ -1,4 +1,6 @@
 # import the necessary packages
+import logging
+
 from skimage.measure import compare_ssim
 import imutils
 import cv2
@@ -6,9 +8,6 @@ import cv2
 
 class ImageDiff:
     def __init__(self, baseline, comparison):
-        # load the two input images
-        # "Image/FB1.png"
-        # "Image/FB2.png"
         self.baseline = cv2.imread(baseline)
         self.comparison = cv2.imread(comparison)
 
@@ -44,16 +43,16 @@ class ImageDiff:
     def showImageContours(self):
         # cnts is an arary of (x,y) coordenates that descrives the shape that holds all
         # the differences
-        print(self.diff_thresh_contours)
+        logging.debug(self.diff_thresh_contours)
         cv2.drawContours(self.baseline, self.diff_thresh_contours, -1, (225, 255, 120), -1)
         cv2.imshow("Baseline differences", self.baseline)
         cv2.waitKey(0)
 
     # Display a black and white image of the difference found in the two images
     def showDifference(self):
-        print("SSIM: {}".format( self.laplacian_ssim_score))
-        if ( self.laplacian_ssim_score == 1):
-            print("No Diference")
+        logging.info("SSIM: {}".format(self.laplacian_ssim_score))
+        if (self.laplacian_ssim_score == 1):
+            logging.info("No Diference")
         cv2.imshow("image difference", self.laplacian_ssim_diff)
         cv2.waitKey(0)
 
@@ -70,6 +69,7 @@ class ImageDiff:
         cv2.imshow("thresh A", self.baseline_threshold)
         cv2.imshow("thresh B", self.comparison_threshold)
         cv2.waitKey(0)
+
 
 class PixelDiff:
     def __init__(self, baseline, comparison):
@@ -93,7 +93,7 @@ class PixelDiff:
 
         # cnts is an arary of (x,y) coordenates that descrives the shape that holds all
         # the differences
-        print(cnts)
+        logging.debug(cnts)
         cv2.drawContours(self.baseline, cnts, -1, (225, 255, 120), -1)
         cv2.imshow("Image A", self.baseline)
 
