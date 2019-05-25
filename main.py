@@ -3,7 +3,7 @@ import optparse
 import os
 import shutil
 
-from source.imagediff import ImageDiff, PixelDiff
+from source.imagediff import ImageDiff, PixelDiff, VisualDiff
 
 
 def _parse_args():
@@ -34,13 +34,15 @@ def _init_dir(dir_path):
 def main():
     #pixelbypixelComparison("Image/SC21.png","Image/SC22.png")
     baseline_path, comparison_path, output_path, logs_path, verbose, quiet = _parse_args()
-    # image_diff = ImageDiff(baseline_path, comparison_path)
-    PixelDiff(baseline_path, comparison_path)
-    # image_diff.showDifference()
-    # image_diff.showImage()
-    # image_diff.showImageGray()
-    # image_diff.showImageThresh()
-    # image_diff.showImageContours()
+    image_diff = VisualDiff(baseline_path, comparison_path)
+
+    # PixelDiff(baseline_path, comparison_path)
+
+    image_diff.show_difference()
+    image_diff.show_image()
+    image_diff.show_image_gray()
+    image_diff.show_image_thresh()
+    image_diff.show_image_contours()
 
 if __name__ == "__main__":
     main()
