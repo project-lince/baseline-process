@@ -57,9 +57,9 @@ class ImageDiff:
         self.difference = cv2.resize(self.difference, (self.baseline_size[1], self.baseline_size[0]))
         self.comparison = cv2.resize(self.comparison, (self.comparison_size[1], self.comparison_size[0]))
 
-        plt.imshow("Baseline", self.baseline)
-        plt.imshow("Comparison", self.comparison)
-        plt.imshow("Difference", self.difference)
+        cv2.imshow("Baseline", self.baseline)
+        cv2.imshow("Comparison", self.comparison)
+        cv2.imshow("Difference", self.difference)
 
 
         # self.small_diff = cv2.resize(self.baseline, None,fx=0.25, fy=0.25)
