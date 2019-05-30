@@ -99,9 +99,8 @@ class VisualDiff(ImageDiff):
         cv2.imshow("Image B", self.comparison)
         cv2.waitKey(0)
 
-        # Displays the loaded images in black and white
-
     def show_image_gray(self):
+        # Displays the loaded images in black and white
         cv2.imshow("laplacian A", self.baseline_laplacian)
         cv2.imshow("laplacian B", self.comparison_laplacian)
         cv2.imshow("thresh A", self.baseline_threshold)
