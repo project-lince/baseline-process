@@ -35,9 +35,16 @@ def _init_dir(dir_path):
     os.makedirs(dir_path)
 
 def main():
+
+    from source.custom_comparison import pixel_diff
+
     logging.getLogger().setLevel(logging.INFO)
     #pixelbypixelComparison("Image/SC21.png","Image/SC22.png")
     baseline_path, comparison_path, output_path, logs_path, verbose, quiet = _parse_args()
+
+    # pixel_diff(baseline_path, comparison_path)
+
+##STABLE
 
     pixel_diff = ImageDiff(baseline_path, comparison_path)
     visual_diff = ImageDiff(baseline_path, comparison_path, aliasing_filter=True)
@@ -48,30 +55,13 @@ def main():
     # RGB, HSL, and what proportion of the image was that color.
     color_view = np.zeros((350, 350, 3), dtype="uint8")
 
-    # for i in range(0,len(pixel_diff.baseline_colors)):
-    #     color = pixel_diff.baseline_colors[i]
-    #     rgb = color.rgb  # e.g. (255, 151, 210)
-    #     hsl = color.hsl  # e.g. (230, 255, 203)
-    #     proportion = color.proportion  # e.g. 0.34
-    #
-    #     # RGB and HSL are named tuples, so values can be accessed as properties.
-    #     # These all work just as well:
-    #     red = rgb[0]
-    #     red = rgb.r
-    #     saturation = hsl[1]
-    #     saturation = hsl.s
-    #     cv2.rectangle(color_view, (34*i, 0), (6+34+34*i, 34), color.rgb, 3)
-    # cv2.imshow('Color view', color_view)
-    # cv2.waitKey()
-    # VisualDiff(baseline_path, comparison_path)
-    #
-    # PixelDiff(baseline_path, comparison_path)
-
-    # image_diff.show_difference()
-    # image_diff.show_image()
-    # image_diff.show_image_gray()
-    # image_diff.show_image_thresh()
-    # image_diff.show_image_contours()
+    pad = 10
+    for i in range(0,len(pixel_diff.baseline_colors)):
+        pad = pad*i
+        color = pixel_diff.baseline_colors[i]
+        cv2.rectangle(color_view, (pad+34*i, 0), (pad+34+34*i, 34), (color.rgb.b, color.rgb.g, color.rgb.r), -1)
+    cv2.imshow('Color view', color_view)
+    cv2.waitKey()
 
 if __name__ == "__main__":
     main()

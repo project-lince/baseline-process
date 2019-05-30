@@ -15,6 +15,8 @@ class ImageDiff:
         self.comparison_colors = colorgram.extract(comparison, 6)
         self.baseline = cv2.imread(baseline)
         self.comparison = cv2.imread(comparison)
+        self.baseline = cv2.cvtColor(self.baseline, cv2.COLOR_BGR2GRAY)
+        self.comparison = cv2.cvtColor(self.comparison, cv2.COLOR_BGR2GRAY)
         self.baseline = cv2.resize(self.baseline, None, fx=.5, fy=.5)
         self.comparison = cv2.resize(self.comparison, None, fx=.5, fy=.5)
         self.baseline_size = self.baseline.shape
@@ -23,21 +25,16 @@ class ImageDiff:
         self.difference = None
 
         if aliasing_filter or ignore_color:
-            self.baseline= cv2.resize(self.baseline, None, fx=.25, fy=.25)
-            self.comparison= cv2.resize(self.comparison, None, fx=.25, fy=.25)
-
-            # self.baseline = cv2.GaussianBlur(self.baseline, (5, 5), 0)
-            # self.comparison = cv2.GaussianBlur(self.comparison, (5, 5), 0)
+            self.baseline = cv2.GaussianBlur(self.baseline, (9, 3), 0)
+            self.comparison = cv2.GaussianBlur(self.comparison, (9, 3), 0)
             if ignore_color:
-                self.baseline = cv2.cvtColor(self.baseline, cv2.COLOR_BGR2GRAY)
-                self.comparison = cv2.cvtColor(self.comparison, cv2.COLOR_BGR2GRAY)
                 self.baseline = cv2.Laplacian(self.baseline, cv2.CV_64F)
                 self.comparison = cv2.Laplacian(self.comparison, cv2.CV_64F)
 
         (score, diff) = compare_ssim(self.baseline, self.comparison, full=True, multichannel=True)
         logging.info("Difference Score:{}".format(score))
         diff = (diff * 255).astype('uint8')
-        diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+        # diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY) ##TODO GRAY OUT IF ABOVE IS CHANGED
         # threshold the difference image, followed by finding contours
         # obtain the regions of the two input images that differ
         thresh = cv2.threshold(diff, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
