@@ -58,6 +58,6 @@ class ImageDiff:
         cv2.imshow("Comparison", self.comparison)
         cv2.imshow("Difference", self.difference)
 
-
         # self.small_diff = cv2.resize(self.baseline, None,fx=0.25, fy=0.25)
         cv2.waitKey(0)
+
