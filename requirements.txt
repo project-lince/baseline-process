@@ -6,3 +6,7 @@ numpy==1.16.3
 imageio==2.5.0
 scikit-image==0.15.0
 scipy==1.2.1
+colorgram.py==1.2.0
+matplotlib==3.1.1
+opencv-contrib-python==4.1.0.25
+scikit-image==0.15.0

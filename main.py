@@ -6,6 +6,8 @@ import optparse
 import os
 import shutil
 
+from source.custom_comparison import layout_diff
+
 from source.imagediff import ImageDiff
 
 
@@ -45,22 +47,24 @@ def main():
     # pixel_diff(baseline_path, comparison_path)
 
 ##STABLE
+    layout_diff()
+    # pixel_diff = ImageDiff(baseline_path, comparison_path)
+    # visual_diff = ImageDiff(baseline_path, comparison_path, aliasing_filter=True)
+    # color_diff = ImageDiff(baseline_path, comparison_path, ignore_color=True)
 
-    pixel_diff = ImageDiff(baseline_path, comparison_path)
-    visual_diff = ImageDiff(baseline_path, comparison_path, aliasing_filter=True)
-    color_diff = ImageDiff(baseline_path, comparison_path, ignore_color=True)
-    # Extract 6 colors from an image.
+    #  # Extract 6 colors from an image.
 
-    # colorgram.extract returns Color objects, which let you access
-    # RGB, HSL, and what proportion of the image was that color.
-    color_view = np.zeros((350, 350, 3), dtype="uint8")
+    # # colorgram.extract returns Color objects, which let you access
+    #  # RGB, HSL, and what proportion of the image was that color.
 
-    pad = 10
-    for i in range(0,len(pixel_diff.baseline_colors)):
-        pad = pad*i
-        color = pixel_diff.baseline_colors[i]
-        cv2.rectangle(color_view, (pad+34*i, 0), (pad+34+34*i, 34), (color.rgb.b, color.rgb.g, color.rgb.r), -1)
-    cv2.imshow('Color view', color_view)
+    # color_view = np.zeros((350, 350, 3), dtype="uint8")
+
+    # pad = 10
+    # for i in range(0,len(pixel_diff.baseline_colors)):
+    #     pad = pad*i
+    #     color = pixel_diff.baseline_colors[i]
+    #     cv2.rectangle(color_view, (pad+34*i, 0), (pad+34+34*i, 34), (color.rgb.b, color.rgb.g, color.rgb.r), -1)
+    # cv2.imshow('Color view', color_view)
     cv2.waitKey()
 
 if __name__ == "__main__":
