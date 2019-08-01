@@ -2,11 +2,22 @@
 import logging
 from copy import deepcopy
 
+import numpy as np
 from skimage.measure import compare_ssim
 import imutils
 import cv2
 import colorgram
 import matplotlib.pyplot as plt
+
+
+def lower_colors(image, color_amount):
+    Z = image.reshape((-1, 3))
+    Z = np.float32(Z)
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+    ret, label1, center1 = cv2.kmeans(Z, color_amount, None, criteria, 10, 10, cv2.KMEANS_PP_CENTERS)
+    center1 = np.uint8(center1)
+    res1 = center1[label1.flatten()]
+    return res1.reshape((image.shape))
 
 
 class ImageDiff:
@@ -25,6 +36,7 @@ class ImageDiff:
         self.difference = None
 
         if aliasing_filter or ignore_color:
+            # Kmeans for 1 image
             self.baseline = cv2.GaussianBlur(self.baseline, (9, 3), 0)
             self.comparison = cv2.GaussianBlur(self.comparison, (9, 3), 0)
             if ignore_color:
@@ -32,8 +44,12 @@ class ImageDiff:
                 self.comparison = cv2.Laplacian(self.comparison, cv2.CV_64F)
 
         (score, diff) = compare_ssim(self.baseline, self.comparison, full=True, multichannel=True)
+        if aliasing_filter or ignore_color:
+            diff[diff < .9] = 0
+            diff[diff >= .9] = 1
         logging.info("Difference Score:{}".format(score))
         diff = (diff * 255).astype('uint8')
+
         # diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY) ##TODO GRAY OUT IF ABOVE IS CHANGED
         # threshold the difference image, followed by finding contours
         # obtain the regions of the two input images that differ
@@ -48,7 +64,7 @@ class ImageDiff:
         self.difference = deepcopy(self.baseline)
 
         logging.debug(cnts)
-        cv2.drawContours(self.difference, cnts, -1, (225, 255, 120), -1)
+        cv2.drawContours(self.difference, cnts, -1, (120, 120, 120), -1)
 
         self.baseline = cv2.resize(self.baseline, (self.baseline_size[1], self.baseline_size[0]))
         self.difference = cv2.resize(self.difference, (self.baseline_size[1], self.baseline_size[0]))
@@ -60,4 +76,3 @@ class ImageDiff:
 
         # self.small_diff = cv2.resize(self.baseline, None,fx=0.25, fy=0.25)
         cv2.waitKey(0)
-
