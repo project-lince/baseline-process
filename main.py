@@ -25,7 +25,7 @@ def _parse_args():
     # Remove argument delimiting quotes included by OptionParser when file name contains spaces
     baseline_path = args[len(args) - 2].strip('"')
     comparison_path = args[len(args) - 1].strip('"')
-    output_path = parsed_options.output_path.strip('"')
+    output_path = parsed_options.output_path.strip('"') if parsed_options.output_path else None
     logs_path = parsed_options.logs_path.strip('"') if parsed_options.logs_path else None
     return baseline_path, comparison_path, output_path, logs_path, parsed_options.verbose, parsed_options.quiet
 
