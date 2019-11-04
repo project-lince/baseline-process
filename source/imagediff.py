@@ -8,6 +8,7 @@ import imutils
 import cv2
 import colorgram
 import matplotlib.pyplot as plt
+import alphashape
 
 
 def lower_colors(image, color_amount):
@@ -32,7 +33,7 @@ class ImageDiff:
         self.comparison = cv2.resize(self.comparison, None, fx=.5, fy=.5)
         self.baseline_size = self.baseline.shape
         self.comparison_size = self.comparison.shape
-
+        self.bounding_box = None
         self.difference = None
 
         if aliasing_filter or ignore_color:
@@ -69,10 +70,15 @@ class ImageDiff:
         self.baseline = cv2.resize(self.baseline, (self.baseline_size[1], self.baseline_size[0]))
         self.difference = cv2.resize(self.difference, (self.baseline_size[1], self.baseline_size[0]))
         self.comparison = cv2.resize(self.comparison, (self.comparison_size[1], self.comparison_size[0]))
+        _tmp = []
+        for i in range(0, len(cnts)):
+            _tmp.append(cnts[i].reshape(4, 2))
+        self.bounding_box = alphashape.alphashape(_tmp, 0.)
 
+        # self.small_diff = cv2.resize(self.baseline, None,fx=0.25, fy=0.25)
+
+    def render_results(self):
         cv2.imshow("Baseline", self.baseline)
         cv2.imshow("Comparison", self.comparison)
         cv2.imshow("Difference", self.difference)
-
-        # self.small_diff = cv2.resize(self.baseline, None,fx=0.25, fy=0.25)
         cv2.waitKey(0)

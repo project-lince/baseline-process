@@ -47,8 +47,9 @@ def main():
     # pixel_diff(baseline_path, comparison_path)
 
 ##STABLE
-    layout_diff()
-    # pixel_diff = ImageDiff(baseline_path, comparison_path)
+    # layout_diff()
+    pixel_diff = ImageDiff(baseline_path, comparison_path)
+    pixel_diff.render_results()
     # visual_diff = ImageDiff(baseline_path, comparison_path, aliasing_filter=True)
     # color_diff = ImageDiff(baseline_path, comparison_path, ignore_color=True)
 
