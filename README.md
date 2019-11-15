@@ -30,4 +30,4 @@ See also the list of [contributors](https://github.com/project-lince/baseline-pr
 
 ## Acknowledgments
 
-* Aanyone whose code was used, etc
+* Anyone whose code was used, etc
