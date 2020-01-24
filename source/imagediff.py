@@ -49,9 +49,8 @@ class ImageDiff:
             diff[diff >= .95] = 1
         if ignored_regions:
             for i in ignored_regions:
-                for x in range(i[0], i[2]):
-                    for y in range(i[1],i[3]):
-                        diff[x][y] = 0
+                diff[i[0]:i[2], i[1]:i[3]]=0
+
         logging.info("Difference Score:{}".format(score))
         diff = (diff * 255).astype('uint8')
 

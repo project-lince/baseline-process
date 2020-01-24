@@ -27,7 +27,7 @@ def _parse_args():
     comparison_path = args[len(args) - 1].strip('"')
     output_path = parsed_options.output_path.strip('"') if parsed_options.output_path else None
     logs_path = parsed_options.logs_path.strip('"') if parsed_options.logs_path else None
-    ignored_regions = parsed_options.ignored_regions if parsed_options.ignored_regions else None
+    ignored_regions = parsed_options.ignored_regions if parsed_options.ignored_regions else ""
     return baseline_path, comparison_path, output_path, logs_path, parsed_options.verbose, parsed_options.quiet, eval(ignored_regions)
 
 def _init_dir(dir_path):
