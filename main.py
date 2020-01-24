@@ -15,6 +15,8 @@ def _parse_args():
     opt_parser.add_option('-l', '--logs', dest="logs_path", help="Set logs folder path")
     opt_parser.add_option('-q', '--quiet', action="store_true", dest="quiet", help="Prints only warning and error logs")
     opt_parser.add_option('-v', '--verbose', action="store_true", dest="verbose", help="Prints debugging logs")
+    opt_parser.add_option('-i', '--ignore-regions', dest="ignored_regions", help="Set ignored region as a array  [("
+                                                                                 "xmin,ymin,xmax,ymax),(...]")
     parsed_options, args = opt_parser.parse_args()
     if len(args) <= 1:
         opt_parser.error('missing baseline and comparison images')
@@ -25,7 +27,8 @@ def _parse_args():
     comparison_path = args[len(args) - 1].strip('"')
     output_path = parsed_options.output_path.strip('"') if parsed_options.output_path else None
     logs_path = parsed_options.logs_path.strip('"') if parsed_options.logs_path else None
-    return baseline_path, comparison_path, output_path, logs_path, parsed_options.verbose, parsed_options.quiet
+    ignored_regions = parsed_options.ignored_regions if parsed_options.ignored_regions else None
+    return baseline_path, comparison_path, output_path, logs_path, parsed_options.verbose, parsed_options.quiet, eval(ignored_regions)
 
 def _init_dir(dir_path):
     if not dir_path:
@@ -40,15 +43,15 @@ def main():
 
     logging.getLogger().setLevel(logging.INFO)
     #pixelbypixelComparison("Image/SC21.png","Image/SC22.png")
-    baseline_path, comparison_path, output_path, logs_path, verbose, quiet = _parse_args()
+    baseline_path, comparison_path, output_path, logs_path, verbose, quiet, ignored_regions = _parse_args()
 
     # pixel_diff(baseline_path, comparison_path)
 
 ##STABLE
 
-    pixel_diff = ImageDiff(baseline_path, comparison_path)
-    visual_diff = ImageDiff(baseline_path, comparison_path, aliasing_filter=True)
-    color_diff = ImageDiff(baseline_path, comparison_path, ignore_color=True)
+    pixel_diff = ImageDiff(baseline_path, comparison_path, ignored_regions=ignored_regions)
+    visual_diff = ImageDiff(baseline_path, comparison_path, aliasing_filter=True, ignored_regions=ignored_regions)
+    color_diff = ImageDiff(baseline_path, comparison_path, ignore_color=True, ignored_regions=ignored_regions)
     # Extract 6 colors from an image.
 
     # colorgram.extract returns Color objects, which let you access

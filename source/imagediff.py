@@ -21,7 +21,7 @@ def lower_colors(image, color_amount):
 
 
 class ImageDiff:
-    def __init__(self, baseline, comparison, aliasing_filter=False, ignore_color=False):
+    def __init__(self, baseline, comparison, aliasing_filter=False, ignore_color=False, ignored_regions=None):
         self.baseline_colors = colorgram.extract(baseline, 6)
         self.comparison_colors = colorgram.extract(comparison, 6)
         self.baseline = cv2.imread(baseline)
@@ -45,8 +45,13 @@ class ImageDiff:
 
         (score, diff) = compare_ssim(self.baseline, self.comparison, full=True, multichannel=True)
         if aliasing_filter or ignore_color:
-            diff[diff < .9] = 0
-            diff[diff >= .9] = 1
+            diff[diff < .95] = 0
+            diff[diff >= .95] = 1
+        if ignored_regions:
+            for i in ignored_regions:
+                for x in range(i[0], i[2]):
+                    for y in range(i[1],i[3]):
+                        diff[x][y] = 0
         logging.info("Difference Score:{}".format(score))
         diff = (diff * 255).astype('uint8')
 
