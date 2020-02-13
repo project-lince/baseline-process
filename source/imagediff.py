@@ -10,6 +10,7 @@ import colorgram
 import matplotlib.pyplot as plt
 
 
+
 def lower_colors(image, color_amount):
     Z = image.reshape((-1, 3))
     Z = np.float32(Z)
@@ -22,14 +23,15 @@ def lower_colors(image, color_amount):
 
 class ImageDiff:
     def __init__(self, baseline, comparison, aliasing_filter=False, ignore_color=False, ignored_regions=None):
+        img_mod = .5
         self.baseline_colors = colorgram.extract(baseline, 6)
         self.comparison_colors = colorgram.extract(comparison, 6)
         self.baseline = cv2.imread(baseline)
         self.comparison = cv2.imread(comparison)
         self.baseline = cv2.cvtColor(self.baseline, cv2.COLOR_BGR2GRAY)
         self.comparison = cv2.cvtColor(self.comparison, cv2.COLOR_BGR2GRAY)
-        self.baseline = cv2.resize(self.baseline, None, fx=.5, fy=.5)
-        self.comparison = cv2.resize(self.comparison, None, fx=.5, fy=.5)
+        self.baseline = cv2.resize(self.baseline, None, fx=img_mod, fy=img_mod)
+        self.comparison = cv2.resize(self.comparison, None, fx=img_mod, fy=img_mod)
         self.baseline_size = self.baseline.shape
         self.comparison_size = self.comparison.shape
 
@@ -45,13 +47,14 @@ class ImageDiff:
 
         (score, diff) = compare_ssim(self.baseline, self.comparison, full=True, multichannel=True)
         if aliasing_filter or ignore_color:
-            diff[diff < .95] = 0
-            diff[diff >= .95] = 1
+            diff[diff < .90] = 0
+            diff[diff >= .90] = 1
         if ignored_regions:
             for i in ignored_regions:
-                diff[i[0]:i[2], i[1]:i[3]]=0
+                diff[int(i[1]):int(i[3]), int(i[0]):int(i[2])] = 1
+        self.score = diff.mean()
 
-        logging.info("Difference Score:{}".format(score))
+        logging.info("Difference Score:{}".format(self.score))
         diff = (diff * 255).astype('uint8')
 
         # diff = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY) ##TODO GRAY OUT IF ABOVE IS CHANGED
