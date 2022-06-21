@@ -2,7 +2,7 @@ Pillow==6.0.0
 ssim==0.2.2
 imutils==0.5.2
 opencv-python==4.1.0.25
-numpy==1.16.3
+numpy==1.22.0
 imageio==2.5.0
 scikit-image==0.15.0
 scipy==1.2.1
